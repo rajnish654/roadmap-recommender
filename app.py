@@ -1,6 +1,6 @@
 """Browser version of the roadmap planner. Run with: python3 app.py"""
 import html
-import webbrowser
+import os
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import parse_qs
 
@@ -235,10 +235,13 @@ class Handler(BaseHTTPRequestHandler):
 
 
 if __name__ == "__main__":
-    server = HTTPServer(("127.0.0.1", 8000), Handler)
-    print("Running at http://127.0.0.1:8000  (press Ctrl+C to stop)")
-    webbrowser.open("http://127.0.0.1:8000")
+    port = int(os.environ.get("PORT", 8000))
+    server = HTTPServer(("0.0.0.0", port), Handler)
+    print(f"Server running on port {port}")
+
     try:
         server.serve_forever()
     except KeyboardInterrupt:
-        print("\nStopped.")
+        print("Server stopped.")
+    finally:
+        server.server_close()
